@@ -19,14 +19,23 @@ $search = isset($_GET['search']['value']) ? mysqli_real_escape_string($conn, $_G
 
 // Fetch data from crm_lead_master_data table with server-side processing
 // Fetch data from crm_lead_master_data table with server-side processing and search functionality
-$query = "SELECT crm_lead_master_data.*, crm_calling_status.DOR AS Summary_DOR, crm_admin.Name AS Caller
+$query = "SELECT crm_lead_master_data.*, crm_calling_status.DOR AS Summary_DOR
           FROM crm_lead_master_data
           LEFT JOIN crm_calling_status ON crm_lead_master_data.Caller_ID = crm_calling_status.Caller_ID
-          LEFT JOIN crm_admin ON crm_lead_master_data.DOR = crm_calling_status.DOR
-          WHERE CONCAT(Mobile, Alternate_Mobile, Whatsapp, Email, State, City, DOR, Caller) LIKE '%$search%'
+          WHERE 
+            Mobile LIKE '%$search%' OR
+            Alternate_Mobile LIKE '%$search%' OR
+            Whatsapp LIKE '%$search%' OR
+            Email LIKE '%$search%' OR
+            State LIKE '%$search%' OR
+            City LIKE '%$search%' OR
+            DOR LIKE '%$search%'
           LIMIT $start, $length";
 
+
+// Execute the query
 $result = mysqli_query($conn, $query);
+
 
 // Check if query was successful
 if ($result) {
